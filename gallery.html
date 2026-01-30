@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kingsley Nwafor — Photo Book</title>
+  <meta name="description" content="Professional photo book showcasing work, CSR, and leadership moments." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Scroll progress -->
+  <div class="scroll-progress" aria-hidden="true"><div class="scroll-progress__bar"></div></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html">
+        <div class="brand__mark">KN</div>
+        <div class="brand__text">
+          <div class="brand__name">Kingsley Nwafor</div>
+          <div class="brand__role">Photo Book</div>
+        </div>
+      </a>
+
+      <nav class="nav">
+        <button class="nav__toggle" type="button" aria-label="Toggle menu">
+          <span class="nav__toggleLines" aria-hidden="true"></span>
+        </button>
+
+        <div class="nav__menu">
+          <a class="nav__link" href="index.html#contact">Contact</a>
+          <a class="nav__link" href="index.html#csr">CSR</a>
+          <a class="nav__link" href="index.html#experience">Track Record</a>
+          <button class="btn btn--ghost btn--sm themeToggle" type="button" aria-label="Toggle theme">
+            Theme: <span class="themeLabel">Dark</span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page hero -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="sectionHead reveal">
+        <h1 class="sectionTitle" style="font-size:34px;margin-bottom:6px">Photo Book</h1>
+        <p class="sectionLead">
+          A curated visual record of leadership moments—professional operations, community impact, and stakeholder engagements.
+        </p>
+      </div>
+
+      <div class="galleryTop reveal">
+        <div class="galleryTop__left">
+          <div class="seal">
+            <div class="seal__dot"></div>
+            <div>
+              <div class="seal__h">Executive Presence</div>
+              <div class="seal__b">Professional delivery, community responsibility, and operational discipline.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="galleryTop__right">
+          <div class="ctaPanel">
+            <div class="ctaPanel__h">Back to Profile</div>
+            <div class="ctaPanel__b">Return to the executive profile for competencies, track record, and contact details.</div>
+            <div class="ctaPanel__actions">
+              <a class="btn btn--primary" href="index.html">Executive Profile</a>
+              <a class="btn btn--outline" href="index.html#csr">CSR Overview</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gallery grid -->
+      <div class="galleryWrap reveal">
+        <div class="galleryMeta">
+          <div class="galleryMeta__k">Gallery</div>
+          <div class="galleryMeta__v"><span id="photoCount">64</span> photos • click any photo to view</div>
+        </div>
+
+        <div class="galleryMasonry" id="gallery"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox__close" id="lightboxClose" type="button" aria-label="Close">×</button>
+    <button class="lightbox__nav lightbox__nav--prev" id="lightboxPrev" type="button" aria-label="Previous">‹</button>
+    <img class="lightbox__img" id="lightboxImg" alt="Gallery image" />
+    <button class="lightbox__nav lightbox__nav--next" id="lightboxNext" type="button" aria-label="Next">›</button>
+    <div class="lightbox__cap" id="lightboxCap"></div>
+  </div>
+
+  <button class="toTop" type="button" aria-label="Back to top">↑</button>
+
+  <script src="script.js"></script>
+
+  <!-- Gallery builder -->
+  <script>
+    (function(){
+      const gallery = document.getElementById("gallery");
+      const photoCountEl = document.getElementById("photoCount");
+      if(!gallery) return;
+
+      const TOTAL = 64; // you can change if needed
+      photoCountEl && (photoCountEl.textContent = String(TOTAL));
+
+      // Build file list ph-01.jpeg ... ph-64.jpeg
+      const files = Array.from({length: TOTAL}, (_, i) => {
+        const n = String(i + 1).padStart(2, "0"); // 01..64
+        return `Images/gallery/ph-${n}.jpeg`;
+      });
+
+      // Render cards
+      files.forEach((src, idx) => {
+        const fig = document.createElement("figure");
+        fig.className = "gItem";
+        fig.setAttribute("data-idx", String(idx));
+
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = `Photo ${idx + 1}`;
+        img.loading = "lazy";
+
+        fig.appendChild(img);
+        gallery.appendChild(fig);
+      });
+
+      // Lightbox
+      const lb = document.getElementById("lightbox");
+      const lbImg = document.getElementById("lightboxImg");
+      const lbClose = document.getElementById("lightboxClose");
+      const lbPrev = document.getElementById("lightboxPrev");
+      const lbNext = document.getElementById("lightboxNext");
+      const lbCap  = document.getElementById("lightboxCap");
+
+      let current = 0;
+
+      const open = (index) => {
+        current = index;
+        lbImg.src = files[current];
+        lbCap.textContent = `Photo ${current + 1} of ${files.length}`;
+        lb.classList.add("is-open");
+        lb.setAttribute("aria-hidden", "false");
+      };
+
+      const close = () => {
+        lb.classList.remove("is-open");
+        lb.setAttribute("aria-hidden", "true");
+        lbImg.src = "";
+      };
+
+      const prev = () => open((current - 1 + files.length) % files.length);
+      const next = () => open((current + 1) % files.length);
+
+      gallery.addEventListener("click", (e) => {
+        const item = e.target.closest(".gItem");
+        if(!item) return;
+        const idx = parseInt(item.getAttribute("data-idx") || "0", 10);
+        open(idx);
+      });
+
+      lbClose && lbClose.addEventListener("click", close);
+      lbPrev && lbPrev.addEventListener("click", prev);
+      lbNext && lbNext.addEventListener("click", next);
+
+      lb.addEventListener("click", (e) => {
+        if(e.target === lb) close();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if(!lb.classList.contains("is-open")) return;
+        if(e.key === "Escape") close();
+        if(e.key === "ArrowLeft") prev();
+        if(e.key === "ArrowRight") next();
+      });
+    })();
+  </script>
+</body>
+</html>
