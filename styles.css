@@ -1764,3 +1764,64 @@ body::before{
     align-items:flex-start;
   }
 }
+
+/* =====================================================
+   PAGE-SPECIFIC BACKGROUND MOODS
+   ===================================================== */
+
+/* -----------------------------
+   STORY PAGE — editorial slate
+   ----------------------------- */
+body.story-page {
+  background:
+    radial-gradient(1000px 600px at 15% -10%, rgba(122,167,255,0.05), transparent 45%),
+    radial-gradient(900px 500px at 85% 10%, rgba(102,227,196,0.04), transparent 50%),
+    #121822;
+}
+
+/* soften story panels */
+body.story-page .nPanel,
+body.story-page .nHero,
+body.story-page .nStat,
+body.story-page .nCard,
+body.story-page .nBanner,
+body.story-page .nCTA {
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.04),
+    rgba(255,255,255,0.015)
+  );
+}
+
+/* better reading comfort */
+body.story-page .nStory p {
+  color: rgba(232,236,245,0.9);
+}
+
+/* -----------------------------
+   GALLERY PAGE — studio black
+   ----------------------------- */
+body.gallery-page {
+  background:
+    radial-gradient(1200px 600px at 50% -20%, rgba(255,255,255,0.03), transparent 45%),
+    #0b0f14;
+}
+
+/* gallery cards pop gently */
+body.gallery-page .galleryGrid img,
+body.gallery-page .galleryItem {
+  background: #0f141b;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+}
+
+/* gallery captions (if any) */
+body.gallery-page .galleryCaption {
+  color: rgba(235,238,245,0.85);
+}
+
+/* keep buttons consistent */
+body.story-page .btn,
+body.gallery-page .btn {
+  backdrop-filter: blur(4px);
+}
